@@ -27,6 +27,8 @@ function App() {
     solver(initRow, initCol, JSON.parse(JSON.stringify(template)))
   );
 
+  const [end, setEnd] = useState(false);
+
   const handleClick = (e) => {
     e.preventDefault();
 
@@ -35,10 +37,12 @@ function App() {
       const newRow = position[0];
       const newCol = position[1];
 
+      if (data.maze[newRow][newCol] === 2) {
+        setEnd(true);
+      }
+
       setData((prevData) => {
         const { prevRow, prevCol, prevValue, maze } = prevData;
-        console.log("prevData", prevData);
-        console.log("path", path);
         const newMaze = JSON.parse(JSON.stringify(template));
         const newValue = maze[newRow][newCol];
 
@@ -47,7 +51,6 @@ function App() {
         newMaze[newRow][newCol] = 3;
 
         return {
-          isFirst: false,
           prevRow: newRow,
           prevCol: newCol,
           prevValue: newValue,
@@ -61,12 +64,19 @@ function App() {
     <div className="App w-screen h-screen bg-gradient-to-r from-cyan-500 to-blue-500">
       <div className="container mx-auto flex flex-col">
         <Maze maze={data.maze} />
-        <button
-          onClick={handleClick}
-          className="mx-auto w-40 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Next Step
-        </button>
+        {end && (
+          <button className="mx-auto w-40 bg-rose-700 hover:bg-rose-900 text-white font-bold py-2 px-4 rounded">
+            Llegaste
+          </button>
+        )}
+        {!end && (
+          <button
+            onClick={handleClick}
+            className="mx-auto w-40 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Next Step
+          </button>
+        )}
       </div>
     </div>
   );
